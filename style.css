@@ -1,0 +1,32 @@
+/* Make board letters huge and touch-friendly */
+#board button {
+  aspect-ratio: 1 / 1;
+  font-size: 3.25rem;
+  font-weight: 700;
+  background: #27272a;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4),
+              inset 0 -6px 8px -2px rgb(255 255 255 / 0.1);
+  transition: all 0.1s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Highlight when selected during drag */
+#board button.selected {
+  background: #eab308;
+  color: #18181b;
+  transform: scale(1.08);
+  box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.5);
+}
+
+/* Current word preview */
+#currentWord {
+  font-variant-ligatures: none;
+}
+
+/* Prevent unwanted scrolling/zoom while dragging */
+body.playing {
+  overscroll-behavior: none;
+  touch-action: none;
+}

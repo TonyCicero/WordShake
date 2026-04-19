@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WordShake</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-zinc-950 text-white min-h-screen">
+  <div class="max-w-2xl mx-auto p-4 pb-8">
+    <h1 class="text-5xl font-bold text-center mb-6 tracking-tight text-yellow-400">WordShake</h1>
+
+    <!-- Lobby / Waiting Screen -->
+    <div id="lobby" class="space-y-6">
+      <input id="name" type="text" placeholder="Your name" 
+             class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-2xl px-6 py-5 text-xl placeholder-zinc-500">
+
+      <div id="createJoinSection" class="flex flex-col sm:flex-row gap-4">
+        <button onclick="createRoom()" 
+                class="flex-1 bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
+          Create New Room
+        </button>
+        
+        <div class="flex-1 flex gap-3">
+          <input id="roomIdInput" type="text" placeholder="Room code" 
+                 class="flex-1 bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl px-6 py-5 text-xl placeholder-zinc-500 uppercase">
+          <button onclick="joinRoom()" 
+                  class="bg-blue-600 hover:bg-blue-700 transition px-10 rounded-3xl text-2xl font-semibold">
+            Join
+          </button>
+        </div>
+      </div>
+
+      <!-- Waiting / Invite Section (shown after creating or joining) -->
+      <div id="waitingSection" class="hidden bg-zinc-900 rounded-3xl p-8 text-center">
+        <div class="mb-6">
+          <p class="text-zinc-400 text-lg">Room Code</p>
+          <div id="displayRoomId" class="font-mono text-4xl font-bold text-yellow-400 tracking-widest mt-2"></div>
+        </div>
+
+        <button onclick="copyInviteLink()" 
+                class="w-full bg-violet-600 hover:bg-violet-700 transition py-5 rounded-3xl text-xl font-semibold flex items-center justify-center gap-3">
+          📋 Copy Invite Link
+        </button>
+
+        <p id="waitingMessage" class="mt-8 text-zinc-400 text-lg">
+          Waiting for host to start the game...
+        </p>
+
+        <button onclick="startGame()" id="startBtn"
+                class="mt-8 w-full hidden bg-red-600 hover:bg-red-700 transition py-6 rounded-3xl text-2xl font-semibold">
+          Start Game (3 minutes)
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game" class="hidden">
+      <div class="flex justify-between items-center mb-4">
+        <div class="text-sm text-zinc-400">Room: <span id="roomId" class="font-mono text-yellow-400"></span></div>
+        <div id="timer" class="text-5xl font-bold text-yellow-400 tabular-nums">180</div>
+      </div>
+
+      <!-- Pre-game placeholder -->
+      <div id="preGameBoard" class="mx-auto max-w-[380px] bg-zinc-900 rounded-3xl p-12 text-center hidden">
+        <div class="text-6xl mb-6">🎲</div>
+        <p class="text-2xl text-zinc-400">The board will appear when the game starts...</p>
+      </div>
+
+      <!-- Actual Board (hidden until game starts) -->
+      <div id="boardContainer" class="hidden">
+        <div id="board" class="grid grid-cols-4 gap-3 mx-auto max-w-[380px] touch-none select-none"></div>
+      </div>
+
+      <div id="currentWord" 
+           class="mt-6 text-center text-4xl font-mono tracking-widest h-12 text-yellow-300 min-h-[3rem]"></div>
+
+      <div class="mt-2 px-4">
+        <input id="wordInput" type="text" placeholder="Or type word + Enter" 
+               class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl px-6 py-5 text-2xl text-center uppercase tracking-widest">
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div>
+          <h2 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <span>Your Words</span>
+            <span id="myWordCount" class="text-sm bg-zinc-800 px-3 py-1 rounded-full">0</span>
+          </h2>
+          <ul id="myWords" class="bg-zinc-900 rounded-3xl p-5 min-h-[220px] max-h-[280px] overflow-y-auto text-lg space-y-1"></ul>
+          <div id="myScore" class="mt-4 text-3xl font-bold text-center">Score: <span class="text-yellow-400">0</span></div>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-3">Players</h2>
+          <ul id="playersList" class="bg-zinc-900 rounded-3xl p-5 space-y-3"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results" class="hidden">
+      <h2 class="text-4xl font-bold text-center mb-8 text-yellow-400">Round Complete!</h2>
+      <div id="finalScores" class="space-y-6"></div>
+      
+      <button onclick="location.reload()" 
+              class="mt-12 w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
+        Play Again
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
