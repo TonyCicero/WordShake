@@ -19,25 +19,34 @@
     <h1 class="text-5xl font-bold text-center mb-6 tracking-tight text-yellow-400">WordShake</h1>
 
     <!-- Lobby / Waiting Screen -->
-    <div id="lobby" class="space-y-6">
+    <div id="lobby" class="space-y-8">
       <input id="name" type="text" placeholder="Your name" 
              class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-2xl px-6 py-5 text-xl placeholder-zinc-500">
 
-      <div id="createJoinSection" class="flex flex-col sm:flex-row gap-4">
-        <button onclick="createRoom()" 
-                class="flex-1 bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
-          Create New Room
-        </button>
-        
-        <div class="flex-1 flex gap-3">
-          <input id="roomIdInput" type="text" placeholder="Room code" 
-                 class="flex-1 bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl px-6 py-5 text-xl placeholder-zinc-500 uppercase">
-          <button onclick="joinRoom()" 
-                  class="bg-blue-600 hover:bg-blue-700 transition px-10 rounded-3xl text-2xl font-semibold">
-            Join
-          </button>
-        </div>
-      </div>
+	  <div id="createJoinSection">
+	  
+		  <!-- Create Room Button with extra space below -->
+		  <button onclick="createRoom()" 
+				  class="w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
+			Create New Room
+		  </button>
+
+		  <!-- Extra spacing as requested -->
+		  <div class="h-6"></div>
+		  <p class="text-center">OR</p>
+		  <div class="h-6"></div>
+
+		  <!-- Room Code and Join - now on separate lines -->
+		  <div class="space-y-4">
+			<input id="roomIdInput" type="text" placeholder="Enter room code" 
+				   class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl px-6 py-5 text-xl placeholder-zinc-500 uppercase tracking-widest">
+			
+			<button onclick="joinRoom()" 
+					class="w-full bg-blue-600 hover:bg-blue-700 transition py-6 rounded-3xl text-2xl font-semibold">
+			  Join Room
+			</button>
+		  </div>
+	  </div>
 
       <!-- Waiting / Invite Section (shown after creating or joining) -->
       <div id="waitingSection" class="hidden bg-zinc-900 rounded-3xl p-8 text-center">
