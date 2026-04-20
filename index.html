@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
+
+  <!-- Flash feedback overlay -->
+  <div id="feedbackFlash" 
+       class="fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 hidden">
+  </div>
+
   <div class="max-w-2xl mx-auto p-4 pb-8">
     <h1 class="text-5xl font-bold text-center mb-6 tracking-tight text-yellow-400">WordShake</h1>
 
@@ -75,12 +81,9 @@
       </div>
 
       <div id="currentWord" 
-           class="mt-6 text-center text-4xl font-mono tracking-widest h-12 text-yellow-300 min-h-[3rem]"></div>
+           class="mt-6 text-center text-4xl font-mono tracking-widest h-12 text-yellow-300 min-h-[3rem]">
+	  </div>
 
-      <div class="mt-2 px-4">
-        <input id="wordInput" type="text" placeholder="Or type word + Enter" 
-               class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl px-6 py-5 text-2xl text-center uppercase tracking-widest">
-      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <div>
@@ -88,7 +91,9 @@
             <span>Your Words</span>
             <span id="myWordCount" class="text-sm bg-zinc-800 px-3 py-1 rounded-full">0</span>
           </h2>
-          <ul id="myWords" class="bg-zinc-900 rounded-3xl p-5 min-h-[220px] max-h-[280px] overflow-y-auto text-lg space-y-1"></ul>
+          <ul id="myWords" 
+			class="bg-zinc-900 rounded-3xl p-5 min-h-[220px] max-h-[280px] overflow-y-auto text-lg space-y-1 overscroll-contain">
+		</ul>
           <div id="myScore" class="mt-4 text-3xl font-bold text-center">Score: <span class="text-yellow-400">0</span></div>
         </div>
 

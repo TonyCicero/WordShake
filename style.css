@@ -30,3 +30,31 @@ body.playing {
   overscroll-behavior: none;
   touch-action: none;
 }
+
+/* Flash feedback */
+#feedbackFlash {
+  opacity: 0;
+}
+
+#feedbackFlash.green {
+  background: rgba(16, 185, 129, 0.25); /* emerald-500 with transparency */
+}
+
+#feedbackFlash.red {
+  background: rgba(239, 68, 68, 0.25);   /* red-500 with transparency */
+}
+
+/* Better scrolling for word list on mobile */
+#myWords {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #27272a;
+}
+
+#myWords::-webkit-scrollbar {
+  width: 6px;
+}
+
+#myWords::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 20px;
+}

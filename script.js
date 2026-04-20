@@ -10,7 +10,9 @@ let currentWordStr = '';
 
 const boardEl = document.getElementById('board');
 const currentWordEl = document.getElementById('currentWord');
+const feedbackFlash = document.getElementById('feedbackFlash');
 const wordInput = document.getElementById('wordInput');
+
 
 // ====================== SOCKET EVENT HANDLERS ======================
 
@@ -48,12 +50,20 @@ socket.on('wordAccepted', ({ playerId, word, score }) => {
   if (playerId === socket.id) {
     addToMyWords(word);
     document.getElementById('myScore').innerHTML = `Score: <span class="text-yellow-400">${score}</span>`;
+    showFeedback(true);        // ← Green flash
   }
 });
 
-socket.on('wordRejected', () => {
+socket.on('wordRejected', ({ word, reason }) => {
+  showFeedback(false);         // ← Red flash
+  
+  // Optional: still show the rejection reason briefly
   currentWordEl.style.color = '#ef4444';
-  setTimeout(() => currentWordEl.style.color = '', 600);
+  currentWordEl.textContent = reason ? reason.substring(0, 25) : 'Invalid';
+  setTimeout(() => {
+    currentWordEl.style.color = '';
+    currentWordEl.textContent = '';
+  }, 800);
 });
 
 socket.on('roundEnded', ({ players }) => {
@@ -257,6 +267,23 @@ function renderFinalScores(players) {
       </div>`;
   });
   document.getElementById('finalScores').innerHTML = html;
+}
+
+function showFeedback(isValid) {
+  feedbackFlash.classList.remove('hidden', 'green', 'red');
+  feedbackFlash.classList.add(isValid ? 'green' : 'red');
+  
+  // Trigger reflow then fade in
+  feedbackFlash.offsetHeight;
+  feedbackFlash.style.opacity = '1';
+
+  setTimeout(() => {
+    feedbackFlash.style.opacity = '0';
+    setTimeout(() => {
+      feedbackFlash.classList.add('hidden');
+      feedbackFlash.classList.remove('green', 'red');
+    }, 300);
+  }, 180); // short flash
 }
 
 // Auto-fill room from invite link ?room=xxx
