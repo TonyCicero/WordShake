@@ -58,3 +58,7 @@ body.playing {
   background: #4b5563;
   border-radius: 20px;
 }
+
+.uppercase {
+	text-transform: uppercase;
+}
