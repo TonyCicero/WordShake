@@ -153,12 +153,12 @@ function joinRoom() {
   socket.emit('joinRoom', { roomId, playerName: name });
 }
 
-function copyInviteLink() {
+function copyInviteLink(event) {
   if (!currentRoom) return;
-  const inviteLink = `${window.location.origin}?room=${currentRoom}`;
+  const inviteLink = `${window.location.origin}${window.location.pathname}?room=${currentRoom}`;
   
   navigator.clipboard.writeText(inviteLink).then(() => {
-    const btn = event.currentTarget;
+    const btn = event.target;
     const orig = btn.innerHTML;
     btn.innerHTML = '✅ Link Copied!';
     setTimeout(() => btn.innerHTML = orig, 2000);
