@@ -12,8 +12,6 @@ let currentWordStr = '';
 const boardEl = document.getElementById('board');
 const currentWordEl = document.getElementById('currentWord');
 const feedbackFlash = document.getElementById('feedbackFlash');
-const wordInput = document.getElementById('wordInput');
-
 
 // ====================== SOCKET EVENT HANDLERS ======================
 
@@ -261,16 +259,6 @@ document.addEventListener('mouseup', endDrag);
 document.addEventListener('touchend', endDrag);
 document.addEventListener('mouseleave', endDrag);
 
-wordInput.addEventListener('keypress', e => {
-  if (e.key === 'Enter' && currentRoom) {
-    const word = wordInput.value.trim().toUpperCase();
-    if (word.length >= 3) {
-      socket.emit('submitWord', { roomId: currentRoom, word });
-      wordInput.value = '';
-    }
-  }
-});
-
 function addToMyWords(word) {
   const list = document.getElementById('myWords');
   const li = document.createElement('li');
@@ -319,6 +307,7 @@ function showFeedback(isValid) {
 // Auto-fill room from invite link ?room=xxx
 window.onload = () => {
   const params = new URLSearchParams(window.location.search);
+  console.log(params)
   const roomFromUrl = params.get('room');
   if (roomFromUrl) {
     document.getElementById('roomIdInput').value = roomFromUrl;
