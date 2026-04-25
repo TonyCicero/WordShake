@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>WordShake</title>
+  <title>Word Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <link rel="stylesheet" href="style.css">
@@ -16,7 +16,7 @@
   </div>
 
   <div class="max-w-2xl mx-auto p-4 pb-8">
-    <h1 class="text-5xl font-bold text-center mb-6 tracking-tight text-yellow-400">WordShake</h1>
+    <h1 class="text-5xl font-bold text-center mb-6 tracking-tight text-yellow-400">Word Game</h1>
 
     <!-- Lobby / Waiting Screen -->
     <div id="lobby" class="space-y-8">
@@ -59,6 +59,12 @@
                 class="w-full bg-violet-600 hover:bg-violet-700 transition py-5 rounded-3xl text-xl font-semibold flex items-center justify-center gap-3">
           📋 Copy Invite Link
         </button>
+
+        <div class="mt-10 text-left">
+        <p class="text-zinc-500 text-xs uppercase tracking-widest mb-4 px-2">Players in Lobby</p>
+        <ul id="waitingPlayersList" class="space-y-3">
+          </ul>
+      </div>
 
         <p id="waitingMessage" class="mt-8 text-zinc-400 text-lg">
           Waiting for host to start the game...
@@ -118,10 +124,18 @@
       <h2 class="text-4xl font-bold text-center mb-8 text-yellow-400">Round Complete!</h2>
       <div id="finalScores" class="space-y-6"></div>
       
-      <button onclick="location.reload()" 
-              class="mt-12 w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
-        Play Again
-      </button>
+      <div id="hostResetArea" class="hidden">
+        <button onclick="requestRestart()" 
+                class="mt-12 w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
+          Play Again
+        </button>
+      </div>
+
+      <div id="guestWaitArea" class="hidden">
+        <p class="mt-12 text-center text-zinc-400 text-xl italic">
+          Waiting for host to start a new round...
+        </p>
+      </div>
     </div>
   </div>
 

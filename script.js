@@ -1,4 +1,5 @@
-const socket = io('https://node.tcicerodev.com'); //const socket = io('http://127.0.0.1:3000');
+//const socket = io('https://node.tcicerodev.com'); 
+const socket = io('http://127.0.0.1:3000');
 
 let currentRoom = null;
 let isHost = false;
@@ -70,6 +71,21 @@ socket.on('roundEnded', ({ players }) => {
   document.body.classList.remove('playing');
   showScreen('results');
   renderFinalScores(players);
+  
+  // Show "Play Again" to host, "Waiting" to others
+  document.getElementById('hostResetArea').classList.toggle('hidden', !isHost);
+  document.getElementById('guestWaitArea').classList.toggle('hidden', isHost);
+});
+
+socket.on('roomReset', (game) => {
+  // 1. Clear local UI state
+  document.getElementById('myWords').innerHTML = '';
+  document.getElementById('myWordCount').textContent = '0';
+  document.getElementById('myScore').innerHTML = 'Score: <span class="text-yellow-400">0</span>';
+  
+  // 2. Hide results and go back to waiting screen
+  document.getElementById('results').classList.add('hidden');
+  enterWaitingScreen(currentRoom, game.players);
 });
 
 socket.on('error', (msg) => {
@@ -102,13 +118,21 @@ function enterWaitingScreen(roomId, players) {
 }
 
 function updatePlayers(players = []) {
-  const list = document.getElementById('playersList');
-  list.innerHTML = players.map(p => `
-    <li class="flex justify-between items-center bg-zinc-800 px-5 py-4 rounded-2xl">
-      <span class="text-lg">${p.name}</span>
+// Target both the list in the lobby and the list in the active game
+  const gameList = document.getElementById('playersList');
+  const waitingList = document.getElementById('waitingPlayersList');
+  
+  // Create the HTML for the player cards
+  const html = players.map(p => `
+    <li class="flex justify-between items-center bg-zinc-800 px-5 py-4 rounded-2xl border border-zinc-700/50">
+      <span class="text-lg font-medium">${p.name}</span>
       <span class="font-bold text-2xl text-yellow-400">${p.score || 0}</span>
     </li>
   `).join('');
+
+  // Update both elements if they exist
+  if (gameList) gameList.innerHTML = html;
+  if (waitingList) waitingList.innerHTML = html;
 }
 
 function createRoom() {
@@ -139,6 +163,12 @@ function copyInviteLink() {
     btn.innerHTML = '✅ Link Copied!';
     setTimeout(() => btn.innerHTML = orig, 2000);
   });
+}
+
+function requestRestart() {
+  if (isHost && currentRoom) {
+    socket.emit('restartGame', currentRoom);
+  }
 }
 
 function startGame() {
