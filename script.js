@@ -124,7 +124,7 @@ function updatePlayers(players = []) {
   const html = players.map(p => `
     <li class="flex justify-between items-center bg-zinc-800 px-5 py-4 rounded-2xl border border-zinc-700/50">
       <span class="text-lg font-medium">${p.name}</span>
-      <span class="font-bold text-2xl text-yellow-400">${p.score || 0}</span>
+      <span class="font-bold text-2xl text-yellow-400">${p.wins || 0}🏆</span>
     </li>
   `).join('');
 
