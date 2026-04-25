@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,11 +9,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-zinc-950 text-white min-h-screen">
 
   <!-- Flash feedback overlay -->
-  <div id="feedbackFlash" 
-       class="fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 hidden">
+  <div id="feedbackFlash" class="fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 hidden">
   </div>
 
   <div class="max-w-2xl mx-auto p-4 pb-8">
@@ -20,59 +21,93 @@
 
     <!-- Lobby / Waiting Screen -->
     <div id="lobby" class="space-y-8">
-      <input id="name" type="text" placeholder="Your name" 
-             class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-2xl px-6 py-5 text-xl placeholder-zinc-500">
+      <input id="name" type="text" placeholder="Your name"
+        class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-2xl px-6 py-5 text-xl placeholder-zinc-500">
 
-	  <div id="createJoinSection">
-	  
-		  <!-- Create Room Button with extra space below -->
-		  <button onclick="createRoom()" 
-				  class="w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
-			Create New Room
-		  </button>
+      <div id="createJoinSection">
 
-		  <!-- Extra spacing as requested -->
-		  <div class="h-6"></div>
-		  <p class="text-center">OR</p>
-		  <div class="h-6"></div>
+        <!-- Create Room Button with extra space below -->
+        <button onclick="createRoom()"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
+          Create New Room
+        </button>
 
-		  <!-- Room Code and Join - now on separate lines -->
-		  <div class="space-y-4">
-			<input id="roomIdInput" type="text" placeholder="Enter room code" 
-				   class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl px-6 py-5 text-xl placeholder-zinc-500 uppercase tracking-widest">
-			
-			<button onclick="joinRoom()" 
-					class="w-full bg-blue-600 hover:bg-blue-700 transition py-6 rounded-3xl text-2xl font-semibold">
-			  Join Room
-			</button>
-		  </div>
-	  </div>
+        <!-- Extra spacing as requested -->
+        <div class="h-6"></div>
+        <p class="text-center">OR</p>
+        <div class="h-6"></div>
+
+        <!-- Room Code and Join - now on separate lines -->
+        <div class="space-y-4">
+          <input id="roomIdInput" type="text" placeholder="Enter room code"
+            class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl px-6 py-5 text-xl placeholder-zinc-500 uppercase tracking-widest">
+
+          <button onclick="joinRoom()"
+            class="w-full bg-blue-600 hover:bg-blue-700 transition py-6 rounded-3xl text-2xl font-semibold">
+            Join Room
+          </button>
+        </div>
+      </div>
 
       <!-- Waiting / Invite Section (shown after creating or joining) -->
       <div id="waitingSection" class="hidden bg-zinc-900 rounded-3xl p-8 text-center">
         <div class="mb-6">
           <p class="text-zinc-400 text-lg">Room Code</p>
-          <div id="displayRoomId" class="font-mono text-4xl uppercase font-bold text-yellow-400 tracking-widest mt-2"></div>
+          <div id="displayRoomId" class="font-mono text-4xl uppercase font-bold text-yellow-400 tracking-widest mt-2">
+          </div>
         </div>
 
-        <button onclick="copyInviteLink(event)" 
-                class="w-full bg-violet-600 hover:bg-violet-700 transition py-5 rounded-3xl text-xl font-semibold flex items-center justify-center gap-3">
+        <button onclick="copyInviteLink(event)"
+          class="w-full bg-violet-600 hover:bg-violet-700 transition py-5 rounded-3xl text-xl font-semibold flex items-center justify-center gap-3">
           📋 Copy Invite Link
         </button>
 
         <div class="mt-10 text-left">
-        <p class="text-zinc-500 text-xs uppercase tracking-widest mb-4 px-2">Players in Lobby</p>
-        <ul id="waitingPlayersList" class="space-y-3">
+          <p class="text-zinc-500 text-xs uppercase tracking-widest mb-4 px-2">Players in Lobby</p>
+          <ul id="waitingPlayersList" class="space-y-3">
           </ul>
-      </div>
+        </div>
 
         <p id="waitingMessage" class="mt-8 text-zinc-400 text-lg">
           Waiting for host to start the game...
         </p>
 
+        <div id="hostOptions" class="mt-8 pt-8 border-t border-zinc-800 text-left hidden">
+          <p class="text-zinc-500 text-xs uppercase tracking-widest mb-4 px-2">Game Options</p>
+          
+          <div class="space-y-4">
+            <div class="flex items-center justify-between bg-zinc-800/50 p-4 rounded-2xl border border-zinc-700/30">
+              <label class="text-zinc-300">Round Time</label>
+              <select id="optTime" class="bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-yellow-400 focus:outline-none focus:border-yellow-500">
+                <option value="60">1 Minute</option>
+                <option value="120">2 Minutes</option>
+                <option value="180" selected>3 Minutes</option>
+                <option value="300">5 Minutes</option>
+              </select>
+            </div>
+
+            <div class="flex items-center justify-between bg-zinc-800/50 p-4 rounded-2xl border border-zinc-700/30">
+              <label class="text-zinc-300">Min Word Length</label>
+              <select id="optMinLength" class="bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-yellow-400 focus:outline-none focus:border-yellow-500">
+                <option value="3" selected>3 Letters</option>
+                <option value="4">4 Letters</option>
+                <option value="5">5 Letters</option>
+              </select>
+            </div>
+
+            <div class="flex items-center justify-between bg-zinc-800/50 p-4 rounded-2xl border border-zinc-700/30">
+              <div class="flex flex-col">
+                <label class="text-zinc-300">Allow Shared Words</label>
+                <span class="text-xs text-zinc-500">Can multiple people find the same word?</span>
+              </div>
+              <input type="checkbox" id="optDuplicates" class="w-6 h-6 rounded accent-yellow-500">
+            </div>
+          </div>
+        </div>
+
         <button onclick="startGame()" id="startBtn"
-                class="mt-8 w-full hidden bg-red-600 hover:bg-red-700 transition py-6 rounded-3xl text-2xl font-semibold">
-          Start Game (3 minutes)
+          class="mt-8 w-full hidden bg-red-600 hover:bg-red-700 transition py-6 rounded-3xl text-2xl font-semibold">
+          Start Game
         </button>
       </div>
     </div>
@@ -95,9 +130,9 @@
         <div id="board" class="grid grid-cols-4 gap-3 mx-auto max-w-[380px] touch-none select-none"></div>
       </div>
 
-      <div id="currentWord" 
-           class="mt-6 text-center text-4xl font-mono tracking-widest h-12 text-yellow-300 min-h-[3rem]">
-	  </div>
+      <div id="currentWord"
+        class="mt-6 text-center text-4xl font-mono tracking-widest h-12 text-yellow-300 min-h-[3rem]">
+      </div>
 
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -106,10 +141,11 @@
             <span>Your Words</span>
             <span id="myWordCount" class="text-sm bg-zinc-800 px-3 py-1 rounded-full">0</span>
           </h2>
-          <ul id="myWords" 
-			class="bg-zinc-900 rounded-3xl p-5 min-h-[220px] max-h-[280px] overflow-y-auto text-lg space-y-1 overscroll-contain">
-		</ul>
-          <div id="myScore" class="mt-4 text-3xl font-bold text-center">Score: <span class="text-yellow-400">0</span></div>
+          <ul id="myWords"
+            class="bg-zinc-900 rounded-3xl p-5 min-h-[220px] max-h-[280px] overflow-y-auto text-lg space-y-1 overscroll-contain">
+          </ul>
+          <div id="myScore" class="mt-4 text-3xl font-bold text-center">Score: <span class="text-yellow-400">0</span>
+          </div>
         </div>
 
         <div>
@@ -123,10 +159,10 @@
     <div id="results" class="hidden">
       <h2 class="text-4xl font-bold text-center mb-8 text-yellow-400">Round Complete!</h2>
       <div id="finalScores" class="space-y-6"></div>
-      
+
       <div id="hostResetArea" class="hidden">
-        <button onclick="requestRestart()" 
-                class="mt-12 w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
+        <button onclick="requestRestart()"
+          class="mt-12 w-full bg-emerald-600 hover:bg-emerald-700 transition py-6 rounded-3xl text-2xl font-semibold">
           Play Again
         </button>
       </div>
@@ -141,4 +177,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>

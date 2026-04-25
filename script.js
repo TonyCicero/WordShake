@@ -31,11 +31,12 @@ socket.on('playerJoined', (game) => {
   }
 });
 
-socket.on('gameStarted', ({ board }) => {
+socket.on('gameStarted', ({ board, timeLeft }) => {
   document.getElementById('waitingSection').classList.add('hidden');
   document.getElementById('game').classList.remove('hidden');
   document.getElementById('preGameBoard').classList.add('hidden');
   document.getElementById('boardContainer').classList.remove('hidden');
+  document.getElementById('timer').textContent = timeLeft; // Sync initial time
   
   renderBoard(board);
   document.body.classList.add('playing');
@@ -102,17 +103,16 @@ function showScreen(screen) {
 function enterWaitingScreen(roomId, players) {
   showScreen('lobby');
   document.getElementById('createJoinSection').classList.add('hidden');
-  
-  const waitingSection = document.getElementById('waitingSection');
-  waitingSection.classList.remove('hidden');
+  document.getElementById('waitingSection').classList.remove('hidden');
   
   document.getElementById('displayRoomId').textContent = roomId;
   document.getElementById('roomId').textContent = roomId;
   
   updatePlayers(players);
   
-  // Only the host sees the Start button
+  // Show host-only UI
   document.getElementById('startBtn').classList.toggle('hidden', !isHost);
+  document.getElementById('hostOptions').classList.toggle('hidden', !isHost);
 }
 
 function updatePlayers(players = []) {
@@ -171,7 +171,12 @@ function requestRestart() {
 
 function startGame() {
   if (currentRoom && isHost) {
-    socket.emit('startGame', currentRoom);
+    const options = {
+      time: parseInt(document.getElementById('optTime').value),
+      minLength: parseInt(document.getElementById('optMinLength').value),
+      allowDuplicates: document.getElementById('optDuplicates').checked
+    };
+    socket.emit('startGame', { roomId: currentRoom, options });
   }
 }
 
