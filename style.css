@@ -26,14 +26,14 @@
 }
 
 /* Prevent unwanted scrolling/zoom while dragging */
-body.playing {
+/* body.playing {
   overscroll-behavior: none;
 }
 
 #board, #board button {
   touch-action: none; 
   user-select: none;
-}
+} */
 
 /* Flash feedback */
 #feedbackFlash {
