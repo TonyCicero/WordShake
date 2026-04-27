@@ -1,8 +1,8 @@
 const socket = io('https://node.tcicerodev.com'); 
 // const socket = io('http://127.0.0.1:3000');
 
-const PLAYER_ID_KEY = 'worpd_player_id';
-const ROOM_ID_KEY = 'worpd_room_id';
+// const PLAYER_ID_KEY = 'worpd_player_id';
+// const ROOM_ID_KEY = 'worpd_room_id';
 
 let currentRoom = null;
 let isHost = false;
@@ -18,26 +18,26 @@ const feedbackFlash = document.getElementById('feedbackFlash');
 
 // ====================== INITIALIZATION ======================
 
-let playerId = localStorage.getItem(PLAYER_ID_KEY);
-if (!playerId) {
-  playerId = 'p-' + Math.random().toString(36).substring(2, 11);
-  localStorage.setItem(PLAYER_ID_KEY, playerId);
-}
+// let playerId = localStorage.getItem(PLAYER_ID_KEY);
+// if (!playerId) {
+//   playerId = 'p-' + Math.random().toString(36).substring(2, 11);
+//   localStorage.setItem(PLAYER_ID_KEY, playerId);
+// }
 
 // ====================== SOCKET EVENT HANDLERS ======================
 
 // Automatically try to rejoin on connection
-socket.on('connect', () => {
-  const savedRoomId = localStorage.getItem(ROOM_ID_KEY);
-  if (savedRoomId) {
-    console.log('Attempting to reconnect to room:', savedRoomId);
-    socket.emit('rejoinRoom', { roomId: savedRoomId, playerId });
-  }
-});
+// socket.on('connect', () => {
+//   const savedRoomId = localStorage.getItem(ROOM_ID_KEY);
+//   if (savedRoomId) {
+//     console.log('Attempting to reconnect to room:', savedRoomId);
+//     socket.emit('rejoinRoom', { roomId: savedRoomId, playerId });
+//   }
+// });
 
 socket.on('roomCreated', ({ roomId, game }) => {
   currentRoom = roomId;
-  localStorage.setItem(ROOM_ID_KEY, roomId);
+  // localStorage.setItem(ROOM_ID_KEY, roomId);
   isHost = true;
   enterWaitingScreen(roomId, game.players);
 });
@@ -51,9 +51,9 @@ socket.on('playerJoined', (game) => {
     updatePlayers(game.players);
   }
 
-  if (game.roomId) {
-    localStorage.setItem(ROOM_ID_KEY, game.roomId);
-  }
+  // if (game.roomId) {
+  //   localStorage.setItem(ROOM_ID_KEY, game.roomId);
+  // }
 
 });
 
@@ -92,28 +92,28 @@ socket.on('wordRejected', ({ word, reason }) => {
   }, 800);
 });
 
-socket.on('rejoinSuccess', ({ game, isAdmin }) => {
-  currentRoom = game.roomId;
-  isHost = isAdmin;
+// socket.on('rejoinSuccess', ({ game, isAdmin }) => {
+//   currentRoom = game.roomId;
+//   isHost = isAdmin;
   
-  if (game.started) {
-    // If game is in progress, sync the board and UI
-    document.getElementById('lobby').classList.add('hidden');
-    document.getElementById('game').classList.remove('hidden');
-    renderBoard(game.board);
-    // Sync words already found
-    const me = game.players.find(p => p.playerId === playerId);
-    if (me) updateMyWordsUI(me.words, me.score);
-  } else {
-    enterWaitingScreen(game.roomId, game.players);
-  }
-});
+//   if (game.started) {
+//     // If game is in progress, sync the board and UI
+//     document.getElementById('lobby').classList.add('hidden');
+//     document.getElementById('game').classList.remove('hidden');
+//     renderBoard(game.board);
+//     // Sync words already found
+//     const me = game.players.find(p => p.playerId === playerId);
+//     if (me) updateMyWordsUI(me.words, me.score);
+//   } else {
+//     enterWaitingScreen(game.roomId, game.players);
+//   }
+// });
 
-socket.on('rejoinFailed', () => {
-  console.log('failed to rejoin room');
-  localStorage.removeItem(ROOM_ID_KEY);
-  currentRoom = null;
-});
+// socket.on('rejoinFailed', () => {
+//   console.log('failed to rejoin room');
+//   localStorage.removeItem(ROOM_ID_KEY);
+//   currentRoom = null;
+// });
 
 socket.on('roundEnded', ({ players }) => {
   document.body.classList.remove('playing');
